@@ -131,7 +131,7 @@ runs:
         EOF
 
         # Assemble executable
-        echo "Assmebling executable..."
+        echo "Assembling executable..."
         sed -i 's|bin/love|bin/${{ inputs.product-name }}|g' ${{ inputs.love-actions-folder }}/squashfs-root/AppRun
         cat ${{ inputs.love-actions-folder }}/squashfs-root/bin/love ${{ inputs.love-package }} > ${{ inputs.love-actions-folder }}/squashfs-root/bin/${{ inputs.product-name }}
         chmod +x ${{ inputs.love-actions-folder }}/squashfs-root/bin/${{ inputs.product-name }}
@@ -159,6 +159,13 @@ runs:
           mkdir -p ${{ inputs.love-actions-folder }}/squashfs-root/share
           cp -r -f ${{ inputs.share-path }}/* ${{ inputs.love-actions-folder }}/squashfs-root/share
         fi
+
+        # Build zip
+        # echo "Building zip..."
+        pushd ${{ inputs.love-actions-folder }}/squashfs-root
+        zip -r ../${{ inputs.product-name }}-linux.zip .
+        popd
+        mv ${{ inputs.love-actions-folder}}/${{ inputs.product-name }}-linux.zip ${{ inputs.output-folder }}/
 
         # Build appImage package
         echo "Building appImage package..."
